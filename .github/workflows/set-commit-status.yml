@@ -7,7 +7,6 @@ on:
           description: 'Personal access token used to authenticate with the GitHub API'
           required: false
           type: string
-          default: '${{ github.token }}'
         state:
           description: 'The state of the commit status'
           required: true
@@ -37,7 +36,6 @@ on:
         description: 'Personal access token used to authenticate with the GitHub API'
         required: false
         type: string
-        default: '${{ secrets.GITHUB_TOKEN }}'
       state:
         description: 'The state of the commit status'
         required: true
@@ -69,7 +67,7 @@ jobs:
     steps:
       - name: Set Commit Status
         env:
-          GITHUB_TOKEN: ${{ github.event.inputs.github_token }}
+          GITHUB_TOKEN: ${{ github.event.inputs.github_token || github.token }}
         run: |
           set -eu
           set -o pipefail
