@@ -89,7 +89,7 @@ jobs:
                -d "{\"state\":\"${STATE}\",\"description\":\"${DESCRIPTION}\",\"context\":\"${CONTEXT}\",\"target_url\":\"${TARGET_URL}\"}" \
                -w "%{http_code}" \
                "https://api.github.com/repos/${{ inputs.github_repository }}/statuses/${SHA}")
-
+          echo "STATUS: ${STATUS}"
           if [ "$STATUS" != "200" ]; then
             echo "Failed to set commit status"
             exit 1
