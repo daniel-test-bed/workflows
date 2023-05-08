@@ -68,8 +68,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 sha: ${{ env.COMMIT_ID }},
-                state: 'failed',
+                state: 'failure',
                 target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                description: 'Job Passed',
+                description: 'Job Failed',
                 context: '${{ inputs.status-name }}'
               })
