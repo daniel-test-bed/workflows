@@ -16,7 +16,7 @@ jobs:
         id: commit_id
         run: |
           pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          commit_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          commit_id=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
             "$pull_request_url" \
             | jq -r ".head.sha")
           echo "COMMIT_ID=$commit_id" >> $GITHUB_ENV
@@ -30,7 +30,7 @@ jobs:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline] 
     with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ github.token }}
       state: "Pending"
       description: "Running"
       context: ${{ github.event.inputs.status-name }}
@@ -44,7 +44,7 @@ jobs:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline, execute-main-workflow] 
     with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ github.token }}
       state: ${{ steps.execute-main-workflow.outcomes.job.result }} == 'success' ?'success':'failure'
       description: "Complete"
       context: ${{ github.event.inputs.status-name }}
