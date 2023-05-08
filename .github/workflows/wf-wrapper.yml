@@ -28,6 +28,8 @@ jobs:
           echo "${{ toJson(github) }}"
   set-commit-status-running:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    permissions:
+      statuses: write
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
       state: "Pending"
@@ -42,6 +44,8 @@ jobs:
   
   set-commit-status-complete:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    permissions:
+      statuses: write
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
       state: ${{ steps.execute-main-workflow.outcomes.job.result }} == 'success' ?'success':'failure'
