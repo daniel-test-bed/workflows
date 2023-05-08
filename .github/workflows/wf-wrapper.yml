@@ -11,8 +11,6 @@ jobs:
   start-pipeline:
     name: Get Commit ID
     runs-on: ubuntu-latest
-    outputs:
-      commit_id: ${{ steps.commit_id.outputs.commit_id }}
     steps:
       - name: Get Latest Commit ID
         id: commit_id
@@ -21,7 +19,7 @@ jobs:
           commit_id=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
             "$pull_request_url" \
             | jq -r ".head.sha")
-          echo "::set-output name=commit_id::$commit_id"
+          echo "::set-env name=COMMIT_ID::$commit_id" >> $GITHUB_ENV
       - name: Print Latest Commit ID
         run: |
           echo "Latest commit ID is ${{ env.COMMIT_ID }}"
@@ -34,10 +32,10 @@ jobs:
     needs: [start-pipeline] 
     with:
       github_token: ${{ github.token }}
-      state: "Pending"
+      state: "pending"
       description: "Running"
       context: ${{ inputs.status-name }}
-      sha: ${{ needs.start-pipeline.outputs.commit_id }}
+      sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
           
@@ -54,6 +52,6 @@ jobs:
       state: ${{ needs.execute-main-workflow.result }} == 'success' ?'success':'failure'
       description: "Complete"
       context: ${{ inputs.status-name }}
-      sha: ${{ needs.start-pipeline.outputs.commit_id }}
+      sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
