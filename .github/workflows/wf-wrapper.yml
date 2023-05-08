@@ -43,6 +43,7 @@ jobs:
   set-commit-status-complete:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline, execute-main-workflow] 
+    if: ${{ always() }}
     with:
       github_token: ${{ github.token }}
       state: ${{ steps.execute-main-workflow.outcomes.job.result }} == 'success' ?'success':'failure'
