@@ -1,11 +1,11 @@
 on:
   workflow_call:
     inputs:
-        status-name:
-          description: 'A name of the status to use'
-          default: 'CI'
-          required: false
-          type: string
+      status-name:
+        description: 'A name of the status to use'
+        default: 'CI'
+        required: false
+        type: string
 
 jobs:    
   start-pipeline:
@@ -28,7 +28,7 @@ jobs:
           echo "${{ toJson(github) }}"
           echo "context: ${{ inputs.status-name }}"
   set-commit-status-running:
-    uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline] 
     with:
       github_token: ${{ github.token }}
@@ -44,12 +44,12 @@ jobs:
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
   
   set-commit-status-complete:
-    uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline, set-commit-status-running, execute-main-workflow] 
-    if: ${{ always() }}
+    if: always()
     with:
       github_token: ${{ github.token }}
-      state: ${{ needs.execute-main-workflow.result  == 'success' ? 'success' :'failure' }}
+      state: ${{ needs.execute-main-workflow.result == 'success' ? 'success' :'failure' }}
       description: "Complete"
       context: ${{ inputs.status-name }}
       sha: ${{ env.COMMIT_ID }}
