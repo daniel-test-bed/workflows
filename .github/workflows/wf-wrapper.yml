@@ -1,5 +1,3 @@
-name: CI Workflow
-
 on:
   workflow_call:
     inputs:
@@ -49,10 +47,10 @@ jobs:
   set-commit-status-complete:
     uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline, set-commit-status-running, execute-main-workflow] 
-    if: always()
+    if: ${{ always() }}
     with:
       github_token: ${{ github.token }}
-      state: ${{ needs.execute-main-workflow.outputs.result == 'success' ? 'success' :'failure' }}
+      state: ${{ if(needs.execute-main-workflow.result == 'success', 'success', 'failure') }}
       description: "Complete"
       context: ${{ github.event.inputs.status-name }}
       sha: ${{ steps.start-pipeline.outputs.commit_id }}
