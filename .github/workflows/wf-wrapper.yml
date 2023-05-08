@@ -47,7 +47,7 @@ jobs:
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
 
   set-commit-status-success:
-      needs: execute-main-workflow
+      needs: [start-pipeline, execute-main-workflow]
       if: ${{ success() }}
       uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
       with:
@@ -60,7 +60,7 @@ jobs:
         github_repository: ${{ github.repository }}
 
   set-commit-status-failure:
-    needs: execute-main-workflow
+    needs: [start-pipeline, execute-main-workflow]
     if: ${{ failure() }}
     uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     with:
