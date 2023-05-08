@@ -37,7 +37,7 @@ jobs:
                 state: 'pending',
                 target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                 description: 'Job running',
-                context: '${{ inputs.status-name }}'
+                context: "${{ inputs.status-name }}"
               })
           
         - name: execute-main-workflow
