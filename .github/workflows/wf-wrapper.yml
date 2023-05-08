@@ -58,6 +58,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const context = github.context;
+            const octokit = github.getOctokit("${{ secrets.GITHUB_TOKEN }}");
             const jobStatus = "${{ steps.get-job-status.outputs.job-status }}";
 
             if (jobStatus === "success") {
