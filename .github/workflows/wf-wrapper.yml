@@ -27,8 +27,6 @@ jobs:
           echo "Input: ${{ inputs.status-name }}"
           echo "${{ toJson(github) }}"
           echo "context: ${{ inputs.status-name }}"
-          echo "target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo "github_repository: ${{ github.repository }}"
   set-commit-status-running:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline] 
