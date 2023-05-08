@@ -49,32 +49,26 @@ jobs:
   set-commit-status-success:
       needs: execute-main-workflow
       if: ${{ success() }}
-      runs-on: ubuntu-latest
-      steps:
-        - name: Set Commit Status Success
-          uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-          with:
-            github_token: ${{ github.token }}
-            state: success
-            description: "Complete - Success"
-            context: ${{ inputs.status-name }}
-            sha: ${{ needs.start-pipeline.outputs.commit_id }}
-            target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            github_repository: ${{ github.repository }}
+      uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+      with:
+        github_token: ${{ github.token }}
+        state: success
+        description: "Complete - Success"
+        context: ${{ inputs.status-name }}
+        sha: ${{ needs.start-pipeline.outputs.commit_id }}
+        target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        github_repository: ${{ github.repository }}
 
   set-commit-status-failure:
     needs: execute-main-workflow
     if: ${{ failure() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set Commit Status Failure
-        uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-        with:
-          github_token: ${{ github.token }}
-          state: failure
-          description: "Complete - Failure"
-          context: ${{ inputs.status-name }}
-          sha: ${{ needs.start-pipeline.outputs.commit_id }}
-          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          github_repository: ${{ github.repository }}
+    uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    with:
+      github_token: ${{ github.token }}
+      state: failure
+      description: "Complete - Failure"
+      context: ${{ inputs.status-name }}
+      sha: ${{ needs.start-pipeline.outputs.commit_id }}
+      target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      github_repository: ${{ github.repository }}
 
