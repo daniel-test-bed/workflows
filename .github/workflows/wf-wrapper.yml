@@ -26,6 +26,9 @@ jobs:
           echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "Input: ${{ inputs.status-name }}"
           echo "${{ toJson(github) }}"
+          echo "context: ${{ github.event.inputs.status-name }}"
+          echo "target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "github_repository: ${{ github.repository }}"
   set-commit-status-running:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline] 
@@ -43,7 +46,7 @@ jobs:
   
   set-commit-status-complete:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-    needs: [start-pipeline, execute-main-workflow] 
+    needs: [start-pipeline, set-commit-status-running, execute-main-workflow] 
     if: ${{ always() }}
     with:
       github_token: ${{ github.token }}
