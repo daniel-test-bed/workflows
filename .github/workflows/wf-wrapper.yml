@@ -49,12 +49,12 @@ jobs:
   set-commit-status-complete:
     uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     needs: [start-pipeline, set-commit-status-running, execute-main-workflow]
-    if: ${{ always() }}
+    if: always()
     with:
       github_token: ${{ github.token }}
-      state: ${{ if(eq(needs.execute-main-workflow.result, 'success'), 'success', 'failure') }}
+      state: ${{ if(needs.execute-main-workflow.result == 'success', 'success', 'failure') }}
       description: "Complete"
       context: ${{ inputs.status-name }}
-      sha: ${{needs.start-pipeline.outputs.commit_id}}
+      sha: ${{ needs.start-pipeline.outputs.commit_id }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
