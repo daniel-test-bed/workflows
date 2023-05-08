@@ -9,7 +9,7 @@ on:
 
 jobs:    
   start-pipeline:
-    name: Set Running
+    name: Get Commit ID
     runs-on: ubuntu-latest
     steps:
       - name: Get Latest Commit ID
@@ -26,54 +26,26 @@ jobs:
           echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "Input: ${{ inputs.status-name }}"
           echo "${{ toJson(github) }}"
-      - name: Set commit status running
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-              github.repos.createCommitStatus({
-                sha: "${{ env.COMMIT_ID }}",
-                state: 'pending',
-                target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                description: 'Job running',
-                context: "${{ inputs.status-name }}"
-              })
+  set-commit-status-running:
+    uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      state: "Pending"
+      description: "Running"
+      context: ${{ github.event.inputs.status-name }}
+      sha: ${{ env.COMMIT_ID }}
+      target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
   execute-main-workflow:
     needs: [ start-pipeline ]
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
   
-  complete-pipeline:
-    needs: [ start-pipeline, execute-main-workflow]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Job Status
-        id: get-job-status
-        run: echo "::set-output name=job-status::${{ job.status }}"
-        env:
-          job-id: ${{ needs.execute-main-workflow.id }}
-      - name: set status
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const context = github.context;
-            const octokit = github.getOctokit("${{ secrets.GITHUB_TOKEN }}");
-            const jobStatus = "${{ steps.get-job-status.outputs.job-status }}";
-
-            if (jobStatus === "success") {
-              octokit.repos.createCommitStatus({
-                ...context.repo,
-                sha: context.sha,
-                state: "success",
-                description: "The job passed",
-                context: "${{ github.event.inputs.status-name }}"
-              });
-            } else {
-              octokit.repos.createCommitStatus({
-                ...context.repo,
-                sha: context.sha,
-                state: "failure",
-                description: "The job failed",
-                context: "${{ github.event.inputs.status-name }}"
-              });
+  set-commit-status-complete:
+    uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      state: ${{ steps.execute-main-workflow.outcomes.job.result }} == 'success' ?'success':'failure'
+      description: "Complete"
+      context: ${{ github.event.inputs.status-name }}
+      sha: ${{ env.COMMIT_ID }}
+      target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
