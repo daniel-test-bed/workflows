@@ -86,9 +86,9 @@ jobs:
           STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
                -H "Accept: application/vnd.github+json" \
                -X POST \
-               -d "{\"state\":\"$STATE\",\"description\":\"$DESCRIPTION\",\"context\":\"$CONTEXT\",\"target_url\":\"$TARGET_URL\"}" \
+               -d "{\"state\":\"${STATE}\",\"description\":\"${DESCRIPTION}\",\"context\":\"${CONTEXT}\",\"target_url\":\"${TARGET_URL}\"}" \
                -w "%{http_code}" \
-               "https://api.github.com/repos/${{ inputs.github_repository }}/statuses/$SHA")
+               "https://api.github.com/repos/${{ inputs.github_repository }}/statuses/${SHA}")
 
           if [ "$STATUS" != "200" ]; then
             echo "Failed to set commit status"
