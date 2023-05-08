@@ -28,28 +28,25 @@ jobs:
           echo "${{ toJson(github) }}"
   set-commit-status-running:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-    permissions:
-      statuses: write
+    needs: [start-pipeline] 
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
       state: "Pending"
       description: "Running"
       context: ${{ github.event.inputs.status-name }}
-      sha: ${{ env.COMMIT_ID }}
+      sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
   execute-main-workflow:
-    needs: [ start-pipeline ]
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
   
   set-commit-status-complete:
     uses:  daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-    permissions:
-      statuses: write
+    needs: [start-pipeline, execute-main-workflow] 
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
       state: ${{ steps.execute-main-workflow.outcomes.job.result }} == 'success' ?'success':'failure'
       description: "Complete"
       context: ${{ github.event.inputs.status-name }}
-      sha: ${{ env.COMMIT_ID }}
+      sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
