@@ -46,15 +46,35 @@ jobs:
     needs: [set-commit-status-running]
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
 
-  set-commit-status-complete:
-    uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
-    needs: [start-pipeline, set-commit-status-running, execute-main-workflow]
-    with:
-      github_token: ${{ github.token }}
-      state: ${{ needs.execute-main-workflow.result == 'success' ? 'success' :'failure' }}
-      description: "Complete"
-      context: ${{ inputs.status-name }}
-      sha: ${{ needs.start-pipeline.outputs.commit_id }}
-      target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      github_repository: ${{ github.repository }}
+  set-commit-status-success:
+      needs: execute-main-workflow
+      if: ${{ success() }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set Commit Status Success
+          uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+          with:
+            github_token: ${{ github.token }}
+            state: success
+            description: "Complete - Success"
+            context: ${{ inputs.status-name }}
+            sha: ${{ needs.start-pipeline.outputs.commit_id }}
+            target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            github_repository: ${{ github.repository }}
+
+  set-commit-status-failure:
+    needs: execute-main-workflow
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Commit Status Failure
+        uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
+        with:
+          github_token: ${{ github.token }}
+          state: failure
+          description: "Complete - Failure"
+          context: ${{ inputs.status-name }}
+          sha: ${{ needs.start-pipeline.outputs.commit_id }}
+          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          github_repository: ${{ github.repository }}
 
