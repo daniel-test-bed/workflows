@@ -46,7 +46,7 @@ jobs:
     if: ${{ always() }}
     with:
       github_token: ${{ github.token }}
-      state: ${{ sneeds.execute-main-workflow.result }} == 'success' ?'success':'failure'
+      state: ${{ needs.execute-main-workflow.result }} == 'success' ?'success':'failure'
       description: "Complete"
       context: ${{ github.event.inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
