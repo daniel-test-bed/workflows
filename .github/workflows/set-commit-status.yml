@@ -1,6 +1,7 @@
 name: Set Commit Status
 
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
       github_token:
