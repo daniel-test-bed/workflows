@@ -36,6 +36,7 @@ jobs:
       context: ${{ github.event.inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      github_repository: ${{ github.repository }}
           
   execute-main-workflow:
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
@@ -51,3 +52,4 @@ jobs:
       context: ${{ github.event.inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      github_repository: ${{ github.repository }}
