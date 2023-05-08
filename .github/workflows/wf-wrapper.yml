@@ -30,15 +30,15 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: ${{ env.COMMIT_ID }},
-              state: 'pending',
-              target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              description: 'Job running',
-              context: "${{ inputs.status-name }}"
-            })
+              github.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: "${{ env.COMMIT_ID }}",
+                state: 'pending',
+                target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                description: 'Job running',
+                context: "${{ inputs.status-name }}"
+              })
           
   execute-main-workflow:
     needs: [ start-pipeline ]
