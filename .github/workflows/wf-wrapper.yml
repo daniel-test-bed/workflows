@@ -6,9 +6,9 @@ on:
         default: 'CI'
         required: false
         type: string
-      workflow:
-        description: 'Workflow to use'
-        default: 'daniel-test-bed/workflows/.github/workflows/sample.yml@main'
+      workflow-version:
+        description: 'Workflow version to use'
+        default: 'main'
         required: false
         type: string
 
@@ -49,7 +49,7 @@ jobs:
 
   execute-main-workflow:
     needs: [set-commit-status-running]
-    uses: "${{ inputs.workflow }}"
+    uses: "daniel-test-bed/workflows/.github/workflows/sample.yml@${{ inputs.workflow-version }}"
 
   set-commit-status-success:
       needs: [start-pipeline, execute-main-workflow]
