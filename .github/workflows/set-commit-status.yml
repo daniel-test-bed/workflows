@@ -73,22 +73,22 @@ jobs:
     steps:
       - name: Set Commit Status
         env:
-          GITHUB_TOKEN: ${{ github.event.inputs.github_token || github.token }}
+          GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
         run: |
           set -eu
           set -o pipefail
-          STATE="${{ github.event.inputs.state }}"
-          DESCRIPTION="${{ github.event.inputs.description }}"
-          CONTEXT="${{ github.event.inputs.context }}"
-          SHA="${{ github.event.inputs.sha }}"
-          TARGET_URL="${{ github.event.inputs.target_url }}"
+          STATE="${{ inputs.state }}"
+          DESCRIPTION="${{ inputs.description }}"
+          CONTEXT="${{ inputs.context }}"
+          SHA="${{ inputs.sha }}"
+          TARGET_URL="${{ inputs.target_url }}"
           
           STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
                -H "Accept: application/vnd.github+json" \
                -X POST \
                -d "{\"state\":\"$STATE\",\"description\":\"$DESCRIPTION\",\"context\":\"$CONTEXT\",\"target_url\":\"$TARGET_URL\"}" \
                -w "%{http_code}" \
-               "https://api.github.com/repos/${{ github.event.inputs.github_repository }}/statuses/$SHA")
+               "https://api.github.com/repos/${{ inputs.github_repository }}/statuses/$SHA")
 
           if [ "$STATUS" != "200" ]; then
             echo "Failed to set commit status"
