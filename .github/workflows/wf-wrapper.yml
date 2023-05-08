@@ -26,7 +26,7 @@ jobs:
           echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "Input: ${{ inputs.status-name }}"
           echo "${{ toJson(github) }}"
-          echo "context: ${{ github.event.inputs.status-name }}"
+          echo "context: ${{ inputs.status-name }}"
           echo "target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "github_repository: ${{ github.repository }}"
   set-commit-status-running:
@@ -36,12 +36,13 @@ jobs:
       github_token: ${{ github.token }}
       state: "Pending"
       description: "Running"
-      context: ${{ github.event.inputs.status-name }}
+      context: ${{ inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
           
   execute-main-workflow:
+    needs: [set-commit-status-running]
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
   
   set-commit-status-complete:
@@ -52,7 +53,7 @@ jobs:
       github_token: ${{ github.token }}
       state: ${{ needs.execute-main-workflow.result }} == 'success' ?'success':'failure'
       description: "Complete"
-      context: ${{ github.event.inputs.status-name }}
+      context: ${{ inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.COMMIT_ID }}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
