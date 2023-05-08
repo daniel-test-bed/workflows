@@ -1,0 +1,52 @@
+name: Set Commit Status
+
+on:
+  workflow_call:
+    inputs:
+      github_token:
+        description: 'Personal access token used to authenticate with the GitHub API'
+        required: true
+        type: string
+      state:
+        description: 'The state of the commit status'
+        required: true
+        type: string
+        default: 'pending'
+      description:
+        description: 'The description of the commit status'
+        required: false
+        type: string
+      context:
+        description: 'The context of the commit status'
+        required: false
+        type: string
+        default: 'default'
+      sha:
+        description: 'The SHA of the commit to set the status for'
+        required: true
+        type: string
+      target_url:
+        description: 'The URL of the target of the status update'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  set-commit-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Commit Status
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.github_token }}
+        run: |
+          STATE="${{ github.event.inputs.state }}"
+          DESCRIPTION="${{ github.event.inputs.description }}"
+          CONTEXT="${{ github.event.inputs.context }}"
+          SHA="${{ github.event.inputs.sha }}"
+          TARGET_URL="${{ github.event.inputs.target_url }}"
+          
+          curl -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github+json" \
+               -X POST \
+               -d "{\"state\":\"$STATE\",\"description\":\"$DESCRIPTION\",\"context\":\"$CONTEXT\",\"target_url\":\"$TARGET_URL\"}" \
+               "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$SHA"
