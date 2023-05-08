@@ -68,6 +68,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.event.inputs.github_token }}
         run: |
+          set -eu
+          set -o pipefail
           STATE="${{ github.event.inputs.state }}"
           DESCRIPTION="${{ github.event.inputs.description }}"
           CONTEXT="${{ github.event.inputs.context }}"
