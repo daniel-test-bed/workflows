@@ -52,7 +52,7 @@ jobs:
       uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
       with:
         github_token: ${{ github.token }}
-        state: success
+        state: "success"
         description: "Complete - Success"
         context: ${{ inputs.status-name }}
         sha: ${{ needs.start-pipeline.outputs.commit_id }}
@@ -65,7 +65,7 @@ jobs:
     uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
     with:
       github_token: ${{ github.token }}
-      state: failure
+      state: "failure"
       description: "Complete - Failure"
       context: ${{ inputs.status-name }}
       sha: ${{ needs.start-pipeline.outputs.commit_id }}
