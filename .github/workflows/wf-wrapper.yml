@@ -49,7 +49,7 @@ jobs:
     if: ${{ always() }}
     with:
       github_token: ${{ github.token }}
-      state: ${{ needs.execute-main-workflow.result  == 'success' ?'success':'failure' }}
+      state: ${{ needs.execute-main-workflow.result  == 'success' ? 'success' :'failure' }}
       description: "Complete"
       context: ${{ inputs.status-name }}
       sha: ${{ env.COMMIT_ID }}
