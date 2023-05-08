@@ -1,0 +1,72 @@
+on:
+  workflow_call:
+    inputs:
+        status-name:
+          description: 'A name of the status to use'
+          default: 'CI'
+          required: false
+          type: string
+
+jobs:    
+  run-pipeline:
+      name: Set Running
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get Latest Commit ID
+          id: commit_id
+          run: |
+            pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
+            commit_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "$pull_request_url" \
+              | jq -r ".head.sha")
+            echo "COMMIT_ID=$commit_id" >> $GITHUB_ENV
+        - name: Print Latest Commit ID
+          run: echo "Latest commit ID is ${{ env.COMMIT_ID }}"
+        - name: Set commit status running
+          uses: actions/github-script@v6
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              github.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: ${{ env.COMMIT_ID }},
+                state: 'pending',
+                target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                description: 'Job running',
+                context: '${{ inputs.status-name }}'
+              })
+          
+        - name: execute-main-workflow
+          uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
+  
+        - name: complete-status-sucess
+          if: success()
+          uses: actions/github-script@v6
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              github.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: ${{ env.COMMIT_ID }},
+                state: 'success',
+                target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                description: 'Job Passed',
+                context: '${{ inputs.status-name }}'
+              })
+        - name: Set commit status failed
+          if: failure()
+          uses: actions/github-script@v6
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              github.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: ${{ env.COMMIT_ID }},
+                state: 'failed',
+                target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                description: 'Job Passed',
+                context: '${{ inputs.status-name }}'
+              })
