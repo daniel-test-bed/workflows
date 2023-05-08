@@ -3,39 +3,41 @@ name: Set Commit Status
 on:
   workflow_dispatch:
     inputs:
-      github_token:
-        description: 'Personal access token used to authenticate with the GitHub API'
-        required: true
-        type: string
-      state:
-        description: 'The state of the commit status'
-        required: true
-        type: string
-        default: 'pending'
-      description:
-        description: 'The description of the commit status'
-        required: false
-        type: string
-      context:
-        description: 'The context of the commit status'
-        required: false
-        type: string
-        default: 'default'
-      sha:
-        description: 'The SHA of the commit to set the status for'
-        required: true
-        type: string
-      target_url:
-        description: 'The URL of the target of the status update'
-        required: false
-        type: string
-        default: ''
+        github_token:
+          description: 'Personal access token used to authenticate with the GitHub API'
+          required: false
+          type: string
+          default: '${{ github.token }}'
+        state:
+          description: 'The state of the commit status'
+          required: true
+          type: string
+          default: 'pending'
+        description:
+          description: 'The description of the commit status'
+          required: false
+          type: string
+        context:
+          description: 'The context of the commit status'
+          required: false
+          type: string
+          default: 'default'
+        sha:
+          description: 'The SHA of the commit to set the status for'
+          required: true
+          type: string
+        target_url:
+          description: 'The URL of the target of the status update'
+          required: false
+          type: string
+          default: ''
   workflow_call:
     inputs:
       github_token:
         description: 'Personal access token used to authenticate with the GitHub API'
-        required: true
+        required: false
         type: string
+        default: '${{ secrets.GITHUB_TOKEN }}'
       state:
         description: 'The state of the commit status'
         required: true
@@ -59,6 +61,7 @@ on:
         required: false
         type: string
         default: ''
+
 
 jobs:
   set-commit-status:
