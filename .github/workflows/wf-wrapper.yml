@@ -25,6 +25,7 @@ jobs:
           echo "Latest commit ID is ${{ env.COMMIT_ID }}"
           echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "Input: ${{ inputs.status-name }}"
+          echo "${{ toJson(github) }}"
       - name: Set commit status running
         uses: actions/github-script@v6
         with:
