@@ -21,7 +21,10 @@ jobs:
               | jq -r ".head.sha")
             echo "COMMIT_ID=$commit_id" >> $GITHUB_ENV
         - name: Print Latest Commit ID
-          run: echo "Latest commit ID is ${{ env.COMMIT_ID }}"
+          run: |
+            echo "Latest commit ID is ${{ env.COMMIT_ID }}"
+            echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Input: ${{ inputs.status-name }}"
         - name: Set commit status running
           uses: actions/github-script@v6
           with:
