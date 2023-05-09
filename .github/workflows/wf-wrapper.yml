@@ -6,12 +6,11 @@ on:
         default: 'CI'
         required: false
         type: string
-      workflow-version:
-        description: 'Workflow version to use'
-        default: 'main'
+      name:
+        description: 'Name to greet'
         required: false
         type: string
-
+      
 jobs:
   start-pipeline:
     name: Get Commit ID
@@ -50,6 +49,8 @@ jobs:
   execute-main-workflow:
     needs: [set-commit-status-running]
     uses: daniel-test-bed/workflows/.github/workflows/sample.yml@main
+    with:
+      name: ${{ inputs.name }}
 
   set-commit-status-success:
       needs: [start-pipeline, execute-main-workflow]
