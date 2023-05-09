@@ -11,5 +11,5 @@ jobs:
           with:
             issue-number: ${{ github.event.issue.number }}
             body: |
-              @${{ github.event.actor }} you must be a collaborator, and the pull request needs the `ok-to-test` label in order to trigger the pipeline.
+              @${{ github.actor }} you must be a collaborator, and the pull request needs the `ok-to-test` label in order to trigger the pipeline.
   
