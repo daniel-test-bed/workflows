@@ -1,0 +1,15 @@
+on:
+  workflow_call:
+  
+jobs:
+    Notify-Contributor-and-Label-Required:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.issue.pull_request && github.event.comment.body == '/run pipeline' && (github.event.comment.author_association != 'CONTRIBUTOR' || !contains(github.event.issue.labels.*.name, 'ok-to-test')) }}
+      steps:
+        - name: Post Comment
+          uses: peter-evans/create-or-update-comment@v1
+          with:
+            issue-number: ${{ github.event.issue.number }}
+            body: |
+              You must be a collaborator, and the pull request needs the `ok-to-test` label in order to trigger the pipeline.
+  
