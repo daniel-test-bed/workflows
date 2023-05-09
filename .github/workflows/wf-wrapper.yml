@@ -33,6 +33,8 @@ jobs:
           echo "Input: ${{ inputs.status-name }}"
           echo "${{ toJson(github) }}"
           echo "context: ${{ inputs.status-name }}"
+          echo "eventPath: ${GITHUB_EVENT_PATH}"
+          echo "eventPathContent: $(cat ${GITHUB_EVENT_PATH})"
 
   set-commit-status-running:
     uses: daniel-test-bed/workflows/.github/workflows/set-commit-status.yml@main
