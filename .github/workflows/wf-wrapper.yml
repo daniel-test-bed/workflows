@@ -13,6 +13,8 @@ on:
       
 jobs:
   start-pipeline:
+#     Only start if the issue contains the lable ok-to-test
+    if: contains(github.event.issue.labels.*.name, 'ok-to-test')
     name: Get Commit ID
     runs-on: ubuntu-latest
     outputs:
