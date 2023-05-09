@@ -12,9 +12,8 @@ jobs:
     steps:
       - name: Remove Labels
         run: |
-          echo "${{ toJson(github) }}"
           # Remove labels
           for label in $(echo "${{ inputs.labels }}" | tr ',' '\n'); do
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "${{ github.event.comment.issue_url }}/labels/${label}"
+              "${{ github.event.pull_request.issues.href }}/labels/${label}"
           done
