@@ -1,0 +1,21 @@
+name: Remove Labels
+on:
+  workflow_call:
+    inputs:
+      labels:
+        description: 'Comma-separated list of labels to remove'
+        type: string
+        required: true
+jobs:
+  remove-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove Labels
+        run: |
+          # Get pull request number
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          # Remove labels
+          for label in $(echo "${{ inputs.labels }}" | tr ',' '\n'); do
+            curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${pr_number}/labels/${label}"
+          done
