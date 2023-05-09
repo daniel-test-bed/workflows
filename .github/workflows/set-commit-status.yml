@@ -1,37 +1,4 @@
 on:
-  workflow_dispatch:
-    inputs:
-        github_token:
-          description: 'Personal access token used to authenticate with the GitHub API'
-          required: false
-          type: string
-        state:
-          description: 'The state of the commit status'
-          required: true
-          type: string
-          default: 'pending'
-        description:
-          description: 'The description of the commit status'
-          required: false
-          type: string
-        context:
-          description: 'The context of the commit status'
-          required: false
-          type: string
-          default: 'default'
-        sha:
-          description: 'The SHA of the commit to set the status for'
-          required: true
-          type: string
-        target_url:
-          description: 'The URL of the target of the status update'
-          required: false
-          type: string
-          default: ''
-        github_repository:
-          description: 'The owner and name of the repository where the commit is located'
-          required: true
-          type: string
   workflow_call:
     inputs:
       github_token:
