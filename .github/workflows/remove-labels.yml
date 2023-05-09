@@ -12,10 +12,9 @@ jobs:
     steps:
       - name: Remove Labels
         run: |
-          # Get pull request number
-          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo ${{ toJson(github.event) }}
           # Remove labels
           for label in $(echo "${{ inputs.labels }}" | tr ',' '\n'); do
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/issues/${pr_number}/labels/${label}"
+              "${{ github.event.comment.issue_url }}/labels/${label}"
           done
