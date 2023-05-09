@@ -17,3 +17,5 @@ jobs:
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               "${{ github.event.pull_request.issues.href }}/labels/${label}"
           done
+#         Prevent adding commit status
+        continue-on-error: true
