@@ -7,7 +7,7 @@ jobs:
       if: ${{ github.event.issue.pull_request && github.event.comment.body == '/run pipeline' && (github.event.comment.author_association != 'CONTRIBUTOR' || !contains(github.event.issue.labels.*.name, 'ok-to-test')) }}
       steps:
         - name: Post Comment
-          uses: peter-evans/create-or-update-comment@v1
+          uses: peter-evans/create-or-update-comment@v3.0.1
           with:
             issue-number: ${{ github.event.issue.number }}
             body: |
