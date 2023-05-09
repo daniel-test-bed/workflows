@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Remove Labels
         run: |
-          echo ${{ toJson(github.event) }}
+          echo "${{ toJson(github) }}"
           # Remove labels
           for label in $(echo "${{ inputs.labels }}" | tr ',' '\n'); do
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
