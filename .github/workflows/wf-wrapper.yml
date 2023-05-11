@@ -19,6 +19,13 @@ jobs:
     with:
       github_token: ${{ github.token }}
 
+  debug:
+    needs: [start-pipeline]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ toJson(needs.start-pipeline)}}"
+          
   set-commit-status-running:
     uses: ./.github/workflows/set-commit-status.yml
     needs: [start-pipeline]
