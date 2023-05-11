@@ -5,6 +5,10 @@ on:
         description: 'Personal access token used to authenticate with the GitHub API. Defaults to pipeline token'
         required: false
         type: string
+    outputs:
+      commit_id:
+        description: "The latest commit id"
+        value: ${{ jobs.get-commit-id.outputs.commit_id }}
 
 jobs:
   get-commit-id:
