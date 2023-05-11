@@ -32,10 +32,11 @@ jobs:
       github_repository: ${{ github.repository }}
 
   execute-main-workflow:
-    needs: [set-commit-status-running]
+    needs: [start-pipeline, set-commit-status-running]
     uses: ./.github/workflows/sample.yml
     with:
       name: ${{ inputs.name }}
+      checkout_commit: ${{needs.start-pipeline.outputs.commit_id}}
 
   set-commit-status-success:
       needs: [start-pipeline, execute-main-workflow]
