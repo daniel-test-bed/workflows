@@ -18,13 +18,6 @@ jobs:
     uses: ./.github/workflows/get-latest-commit-id.yml
     with:
       github_token: ${{ github.token }}
-
-  debug:
-    needs: [start-pipeline]
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "${{ toJson(needs.start-pipeline)}}"
           
   set-commit-status-running:
     uses: ./.github/workflows/set-commit-status.yml
@@ -34,7 +27,7 @@ jobs:
       state: "pending"
       description: "Running"
       context: ${{ inputs.status-name }}
-      sha: ${{needs.start-pipeline.get-commit-id.outputs.commit_id}}
+      sha: ${{needs.start-pipeline.outputs.commit_id}}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
 
