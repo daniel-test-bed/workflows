@@ -27,7 +27,7 @@ jobs:
       state: "pending"
       description: "Running"
       context: ${{ inputs.status-name }}
-      sha: ${{needs.start-pipeline.outputs.commit_id}}
+      sha: ${{needs.start-pipeline.get-commit-id.outputs.commit_id}}
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
 
