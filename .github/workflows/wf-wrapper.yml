@@ -15,28 +15,9 @@ jobs:
   start-pipeline:
     # Only start if the issue contains the lable ok-to-test and the run pipeline was posted by a collaborator
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/run pipeline' && github.event.comment.author_association=='CONTRIBUTOR' && contains(github.event.issue.labels.*.name, 'ok-to-test') }}
-    name: Get Commit ID
-    runs-on: ubuntu-latest
-    outputs:
-      commit_id:  ${{ steps.commit_id.outputs.COMMIT_ID }}
-    steps:
-      - name: Get Latest Commit ID
-        id: commit_id
-        run: |
-          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          commit_id=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
-            "$pull_request_url" \
-            | jq -r ".head.sha")
-          echo "COMMIT_ID=$commit_id" >> "$GITHUB_OUTPUT"
-      - name: Print Latest Commit ID
-        run: |
-          echo "Latest commit ID is ${{ env.COMMIT_ID }}"
-          echo "URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo "Input: ${{ inputs.status-name }}"
-          echo "${{ toJson(github) }}"
-          echo "context: ${{ inputs.status-name }}"
-          echo "eventPath: ${GITHUB_EVENT_PATH}"
-          echo "eventPathContent: $(cat ${GITHUB_EVENT_PATH})"
+    uses: ./.github/workflows/set-commit-status.yml
+    with:
+      github_token: ${{ github.token }}
 
   set-commit-status-running:
     uses: ./.github/workflows/set-commit-status.yml
