@@ -40,4 +40,4 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           ls
-          echo "Test version using release code" 
+          echo "Test version NOT using release version code!!!!" 
