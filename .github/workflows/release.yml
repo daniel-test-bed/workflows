@@ -36,10 +36,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx semantic-release --no-ci
+          TAG_SHA=$(git rev-list -n 1 "v${SEMVER_VERSION}")
+          echo "Tags sha: ${TAG_SHA}"
           # Remove the existing tag created by semantic-release
-          git push origin :refs/tags/$(git describe --tags --abbrev=0) 
+          git tag -d "v${SEMVER_VERSION}"
+          git push origin :refs/tags/v${SEMVER_VERSION}
           
-          git tag "v${SEMVER_VERSION}" "v${SEMVER_VERSION}" -s -m "Sign Tag"
+          git tag "v${SEMVER_VERSION}" ${TAG_SHA} -s -m "Sign Tag"
           export GIT_COMMITTER_DATE="$(git log -1 --format=%aD \"v${SEMVER_VERSION}\")"
           git push origin "v${SEMVER_VERSION}"
           
