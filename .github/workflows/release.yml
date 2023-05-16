@@ -27,7 +27,7 @@ jobs:
           echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
       - name: Install dependencies
-        run: npm install semantic-release @semantic-release/changelog @semantic-release/exec
+        run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git
 
 
       - name: Generate .releaserc.js
