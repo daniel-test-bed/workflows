@@ -38,6 +38,7 @@ jobs:
           npx semantic-release --no-ci
           TAG_SHA=$(git rev-list -n 1 "v${SEMVER_VERSION}")
           echo "Tags sha: ${TAG_SHA}"
+          
           # Remove the existing tag created by semantic-release
           git tag -d "v${SEMVER_VERSION}"
           git push origin :refs/tags/v${SEMVER_VERSION}
