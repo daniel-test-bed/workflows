@@ -37,14 +37,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG: semantic-release*
         run: |
-          echo "Signing enabled:"
-          git config --get commit.gpgsign
-          echo "----------------------------------------------------------"
-          git config --get user.signingkey
-          echo "----------------------------------------------------------"
-          gpg --list-secret-keys --keyid-format LONG
-          echo "----------------------------------------------------------"
-          gpg-agent
-          echo "----------------------------------------------------------"
           npx semantic-release
           
