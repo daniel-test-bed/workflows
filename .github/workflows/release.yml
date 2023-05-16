@@ -24,7 +24,7 @@ jobs:
 
       - name: Set GPG passphrase
         run: |
-          echo "${{ secrets.GPG_PASSPHRASE }}" | base64 -e
+          echo "${{ secrets.GPG_PASSPHRASE }}" | base64
           echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
       - name: Install dependencies
