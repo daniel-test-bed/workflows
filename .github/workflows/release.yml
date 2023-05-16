@@ -27,25 +27,21 @@ jobs:
           echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
       - name: Install dependencies
-        run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git
-
+        run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
 
       - name: Generate .releaserc.js
         run: |
-          echo "const config = {
+          echo "module.exports = {
             branches: ['main'],
             plugins: [
-              '@semantic-release/commit-analyzer",
+              '@semantic-release/commit-analyzer',
               '@semantic-release/release-notes-generator',
               '@semantic-release/github',
               ['@semantic-release/git', {
-                'assets': 'false'
-              }],
+                assets: false
+              }]
             ]
-          };
-
-          module.exports = config;
-          " > .releaserc.js
+          };" > .releaserc.js
 
       - name: Run semantic-release
         env:
