@@ -26,17 +26,31 @@ jobs:
         run: |
           echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
-      - name: Generate package.json
-        run: npm init --yes
-
-      - name: Install semantic-release-cli
-        run: npm install -g semantic-release-cli
+      - name: Install dependencies
+        run: npm install semantic-release semantic-release-gitlab @semantic-release/changelog @semantic-release/exec
 
       - name: Generate .releaserc.js
-        run: npx semantic-release-cli setup
+        run: |
+          echo "module.exports = {
+            branches: ['main'],
+            plugins: [
+              ['@semantic-release/commit-analyzer'],
+              ['@semantic-release/release-notes-generator'],
+              ['@semantic-release/changelog'],
+              ['@semantic-release/npm', {
+                npmPublish: false
+              }],
+              ['@semantic-release/git', {
+                assets: ['package.json', 'package-lock.json'],
+                message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+              }],
+              ['@semantic-release/exec', {
+                prepareCmd: 'echo Prepare step',
+                publishCmd: 'echo Publish step'
+              }]
+            ]
+          };" > .releaserc.js
 
-      - name: Install dependencies
-        run: npm install
 
       - name: Run semantic-release
         env:
