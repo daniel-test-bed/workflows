@@ -21,13 +21,7 @@ jobs:
       - name: Import GPG private key
         id: import-gpg-key
         run: |
-          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes 2>&1 | tee /dev/tty | grep -oP 'key\s+\K\w+' > .github/gpg-key-id.txt
-
-      - name: Read GPG key ID
-        id: read-gpg-key-id
-        run: |
-          GPG_KEY_ID=$(cat .github/gpg-key-id.txt)
-          echo "gpg-key-id=$GPG_KEY_ID" >> "$GITHUB_ENV"
+          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes 2>&1 | tee /dev/tty | grep -oP 'key\s+\K\w+' >> "$GITHUB_ENV"
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
