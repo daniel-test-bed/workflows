@@ -6,14 +6,15 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/github",
     ["@semantic-release/git", {
-      "assets": [],
-      "message": "signed release",
-      "sign": true
+        "assets": false,
+        "message": "chore(release): ${nextRelease.version} [skip ci]",
+        "sign": true,
+        "tagFormat": "v${version}"
     }],
     ["@semantic-release/exec", {
-      "prepareCmd": "echo 'Preparing release ${nextRelease.version}'",
-      "publishCmd": "echo 'Publishing release ${nextRelease.version}'",
-      "successCmd": "gpg --batch --yes --armor --detach-sign --passphrase '${GPG_PASSPHRASE}' -u '${GPG_KEY_ID}' 'dist/*'"
-    }]
+         "prepareCmd": "echo 'Preparing release ${nextRelease.version}'",
+         "publishCmd": "echo 'Publishing release ${nextRelease.version}'",
+         "successCmd": "echo 'Success: ${nextRelease.version}'"
+       }]
   ]
 }
