@@ -34,17 +34,46 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npx semantic-release --no-ci
+        run: npx semantic-release --no-ci
 
-          echo "Tags sha: ${TAG_SHA}"
-          echo "version: v${SEMVER_VERSION}"
-          # Remove the existing tag created by semantic-release
-          git tag -d "v${SEMVER_VERSION}"
-          git push origin :refs/tags/v${SEMVER_VERSION}
-          
-          git tag "v${SEMVER_VERSION}" ${TAG_SHA} -s -m "Sign Tag"
-          export GIT_COMMITTER_DATE="$(git log -1 --format=%aD \"v${SEMVER_VERSION}\")"
-          git push origin "v${SEMVER_VERSION}"
-          
-          
+      - id: versionNumber
+          run: |
+            echo "version=$SEMVER_VERSION"
+            echo "version=$SEMVER_VERSION" >> "$GITHUB_OUTPUT"
+            echo "sha=$TAG_SHA"
+            echo "version=$TAG_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Sign Tag
+        env:
+          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
+        run: |
+          if [ -z "$SEMVER_VERSION" ]
+          then
+            echo "No Release Version Set. Skip tagging"
+          else
+            echo "Version: v${SEMVER_VERSION}"
+            git tag "v${SEMVER_VERSION}" "${TAG_SHA}" -f -s -m "Sign Tag"
+            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD v${SEMVER_VERSION})"
+            git push origin "v${SEMVER_VERSION}" -f
+          fi
+
+#        run: |
+#          npx semantic-release --no-ci
+#
+#
+#              - id: versionNumber
+#        run: |
+#          echo "version=$SEMVER_VERSION"
+#          echo "version=$SEMVER_VERSION" >> "$GITHUB_OUTPUT"
+#
+#          echo "Tags sha: ${TAG_SHA}"
+#          echo "version: v${SEMVER_VERSION}"
+#          # Remove the existing tag created by semantic-release
+#          git tag -d "v${SEMVER_VERSION}"
+#          git push origin :refs/tags/v${SEMVER_VERSION}
+#
+#          git tag "v${SEMVER_VERSION}" ${TAG_SHA} -s -m "Sign Tag"
+#          export GIT_COMMITTER_DATE="$(git log -1 --format=%aD \"v${SEMVER_VERSION}\")"
+#          git push origin "v${SEMVER_VERSION}"
+#
+#
