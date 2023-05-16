@@ -38,7 +38,9 @@ jobs:
               '@semantic-release/release-notes-generator',
               '@semantic-release/github',
               ['@semantic-release/git', {
-                assets: []
+                assets: [],
+                message: 'signed release',
+                sign: true          
               }]
             ]
           };" > .releaserc.js
