@@ -24,29 +24,10 @@ jobs:
 #
 #      - name: Set GPG passphrase
 #        run: |
-#          echo "TestKeyPassw0rd" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
+#          echo ${{ secrets.GPG_PASSPHRASE }}| gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
-
-      - name: Generate .releaserc.js
-        run: |
-          echo "module.exports = {
-            branches: ['main'],
-            plugins: [
-              '@semantic-release/commit-analyzer',
-              '@semantic-release/release-notes-generator',
-              '@semantic-release/github',
-              ['@semantic-release/git', {
-                assets: [],
-                message: 'signed release',
-                sign: true          
-              }],
-              ['@semantic-release/exec', {
-                'successCmd': 'echo \"SEMVER_VERSION=${nextRelease.version}\" >> $GITHUB_ENV'
-              }]
-            ]
-          };" > .releaserc.js
 
       - name: Run semantic-release
         env:
@@ -60,9 +41,9 @@ jobs:
           echo "version=$SEMVER_VERSION"
           echo "version=$SEMVER_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Sign Tag
-        env:
-          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
-        run: |
-          git tag -s ${{ env.SEMVER_VERSION }} -m "Release ${{ env.SEMVER_VERSION }}"
-          git push origin ${{ env.SEMVER_VERSION }}
+#      - name: Sign Tag
+#        env:
+#          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
+#        run: |
+#          git tag -s ${{ env.SEMVER_VERSION }} -m "Release ${{ env.SEMVER_VERSION }}"
+#          git push origin ${{ env.SEMVER_VERSION }}
