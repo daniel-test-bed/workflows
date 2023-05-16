@@ -10,11 +10,6 @@
         "message": "chore(release): ${nextRelease.version} [skip ci]",
         "sign": true,
         "tagFormat": "v${version}"
-    }],
-    ["@semantic-release/exec", {
-         "prepareCmd": "echo 'Preparing release ${nextRelease.version}'",
-         "publishCmd": "echo 'Publishing release ${nextRelease.version}'",
-         "successCmd": "echo 'Success: ${nextRelease.version}'"
-       }]
+    }]
   ]
 }
