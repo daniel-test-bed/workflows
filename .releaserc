@@ -8,11 +8,10 @@
     ["@semantic-release/git", {
         "assets": [],
         "message": "chore(release): ${nextRelease.version} [skip ci]",
-        "sign": true,
         "tagFormat": "v${version}"
     }],
       ["@semantic-release/exec", {
-        "successCmd": "echo \"SEMVER_VERSION=${nextRelease.version}\" >> $GITHUB_ENV"
+        "successCmd": "echo \"SEMVER_VERSION=${nextRelease.version}\" >> $GITHUB_ENV && echo \"TAG_SHA=$(git rev-parse v${nextRelease.version})\" >> $GITHUB_ENV"
       }]
   ]
 }
