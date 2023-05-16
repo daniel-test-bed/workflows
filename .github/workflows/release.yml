@@ -18,13 +18,16 @@ jobs:
         with:
           node-version: 18
 
-#      - name: Import GPG private key
-#        run: |
-#          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes
-#
-#      - name: Set GPG passphrase
-#        run: |
-#          echo ${{ secrets.GPG_PASSPHRASE }}| gpg --passphrase-fd 0 --pinentry-mode loopback -s
+      - name: Import GPG private key
+        id: import-gpg-key
+        run: |
+          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes 2>&1 | tee /dev/tty | grep -oP 'key\s+\K\w+' > .github/gpg-key-id.txt
+
+      - name: Read GPG key ID
+        id: read-gpg-key-id
+        run: |
+          GPG_KEY_ID=$(cat .github/gpg-key-id.txt)
+          echo "gpg-key-id=$GPG_KEY_ID" >> "$GITHUB_ENV"
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
@@ -32,20 +35,6 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_PRIVATE_KEY: ${{ secrets.RELEASE_PRIVATE_PGP }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ steps.read-gpg-key-id.outputs.gpg-key-id }}
         run: npx semantic-release
-
-      - id: versionNumber
-        run: |
-          echo "version=$SEMVER_VERSION"
-          echo "version=$SEMVER_VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Sign Tag
-        env:
-          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
-        run: |
-          git config --global user.email "dannyeb@gmail.com"
-          git config --global user.name "Daniel Butler"
-          git tag -s ${{ env.SEMVER_VERSION }} -m "Release ${{ env.SEMVER_VERSION }}"
-          git push origin ${{ env.SEMVER_VERSION }}
