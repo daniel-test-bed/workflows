@@ -18,9 +18,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Import GPG private key
         run: |
           echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes
