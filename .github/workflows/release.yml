@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: 18
 
-      - name: Import GPG private key
-        run: |
-          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes
-
-      - name: Set GPG passphrase
-        run: |
-          echo "TestKeyPassw0rd" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
+#      - name: Import GPG private key
+#        run: |
+#          echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes
+#
+#      - name: Set GPG passphrase
+#        run: |
+#          echo "TestKeyPassw0rd" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
@@ -48,4 +48,6 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_PRIVATE_KEY: ${{ secrets.RELEASE_PRIVATE_PGP }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: npx semantic-release
