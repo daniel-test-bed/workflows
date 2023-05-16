@@ -41,9 +41,9 @@ jobs:
           echo "version=$SEMVER_VERSION"
           echo "version=$SEMVER_VERSION" >> "$GITHUB_OUTPUT"
 
-#      - name: Sign Tag
-#        env:
-#          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
-#        run: |
-#          git tag -s ${{ env.SEMVER_VERSION }} -m "Release ${{ env.SEMVER_VERSION }}"
-#          git push origin ${{ env.SEMVER_VERSION }}
+      - name: Sign Tag
+        env:
+          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
+        run: |
+          git tag -s ${{ env.SEMVER_VERSION }} -m "Release ${{ env.SEMVER_VERSION }}"
+          git push origin ${{ env.SEMVER_VERSION }}
