@@ -23,8 +23,8 @@ jobs:
           echo "${{ secrets.RELEASE_PRIVATE_PGP }}" | base64 --decode | gpg --import --batch --yes
 
       - name: Set GPG passphrase
-        run: |
-          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --passphrase-fd 0 --pinentry-mode loopback -s
+        run: echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --passphrase-fd 0 --pinentry-mode loopback --import-options import-show --import
+
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
