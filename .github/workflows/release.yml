@@ -27,7 +27,6 @@ jobs:
           git_config_global: true
           git_user_signingkey: true
           git_commit_gpgsign: true
-          git_tag_gpgsign: true
 
       - name: Install dependencies
         run: npm install semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
@@ -37,5 +36,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG: semantic-release*
         run: |
-          npx semantic-release
+          npx semantic-release --no-ci
+          # Remove the existing tag created by semantic-release
+          git push origin :refs/tags/$(git describe --tags --abbrev=0) 
+          
+          git tag "v${SEMVER_VERSION}" "v${SEMVER_VERSION}" -s -m "Sign Tag"
+          export GIT_COMMITTER_DATE="$(git log -1 --format=%aD v${SEMVER_VERSION})"
+          git push origin "v${SEMVER_VERSION}"
+          
           
