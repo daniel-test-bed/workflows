@@ -31,26 +31,28 @@ jobs:
 
       - name: Generate .releaserc.js
         run: |
-          echo "module.exports = {
+          echo "const config = {
             branches: ['main'],
             plugins: [
-              ['@semantic-release/commit-analyzer'],
-              ['@semantic-release/release-notes-generator'],
-              ['@semantic-release/changelog'],
+              '@semantic-release/commit-analyzer',
+              '@semantic-release/release-notes-generator',
+              '@semantic-release/changelog',
               ['@semantic-release/npm', {
                 npmPublish: false
               }],
               ['@semantic-release/git', {
                 assets: ['package.json', 'package-lock.json'],
-                message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+                message: 'chore(release): \${nextRelease.version} [skip ci]\\n\\n\${nextRelease.notes}'
               }],
               ['@semantic-release/exec', {
                 prepareCmd: 'echo Prepare step',
                 publishCmd: 'echo Publish step'
               }]
             ]
-          };" > .releaserc.js
+          };
 
+          module.exports = config;
+          " > .releaserc.js
 
       - name: Run semantic-release
         env:
