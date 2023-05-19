@@ -45,7 +45,7 @@ jobs:
           env
           echo "-------------------"
           echo "EVENT"
-          echo '${{ toJson(github.event) }}
+          echo "${{ toJson(github.event) }}"
           echo "-------------------"
           echo "CURRENT BRANCH"
           git branch --show-current 
