@@ -15,14 +15,24 @@ on:
             description: Commit ID you want to checkout
             type: string
             required: true
-            
+          GITHUB_BASE_REF: 
+            description: target branch merging into
+            type: string
+            required: true
+          GITHUB_HEAD_REF: 
+            description: source branch coming from
+            type: string
+            required: true
+env:
+  GITHUB_BASE_REF: ${{inputs.GITHUB_BASE_REF}}
+  GITHUB_HEAD_REF: ${{inputs.GITHUB_HEAD_REF}}
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
