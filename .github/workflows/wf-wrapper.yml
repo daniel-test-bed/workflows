@@ -37,6 +37,8 @@ jobs:
     with:
       name: ${{ inputs.name }}
       checkout_commit: ${{needs.start-pipeline.outputs.commit_id}}
+      GITHUB_BASE_REF: ${{ needs.start-pipeline.outputs.target_branch}}
+      GITHUB_HEAD_REF: ${{ needs.start-pipeline.outputs.source_branch}}
 
   set-commit-status-success:
       needs: [start-pipeline, execute-main-workflow]
