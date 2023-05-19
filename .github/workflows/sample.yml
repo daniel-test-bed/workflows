@@ -47,18 +47,8 @@ jobs:
           echo "$pr_json"
           echo "-------------------"
           echo "Target:"
-          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          target=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
-            --retry 3 \
-            "$pull_request_url" \
-            | jq ".base.ref")
-          echo "$target"
+          echo "$GITHUB_BASE_REF"
            echo "-------------------"
           echo "CURRENT BRANCH"
-          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          source=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
-            --retry 3 \
-            "$pull_request_url" \
-            | jq ".head.ref")
-          echo "$source"
+          echo "$GITHUB_HEAD_REF"
           echo "-------------------"
