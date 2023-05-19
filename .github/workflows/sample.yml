@@ -48,7 +48,7 @@ jobs:
           echo "${{ toJson(github.event) }}"
           echo "-------------------"
           echo "CURRENT BRANCH"
-          git branch --show-current 
+          echo "Current: $(git branch --show-current)" 
           echo "-------------------"
           echo "Old target code"
           echo "origin/${GITHUB_BASE_REF}"
