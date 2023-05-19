@@ -41,17 +41,22 @@ jobs:
           echo test, and deploy your project.
           ls
           echo "-------------------"
-          echo "ENVARS"
+          #echo "ENVARS"
           env
           echo "-------------------"
-          echo "EVENT"
-          echo "${{ toJson(github.event) }}"
+          #echo "EVENT"
+          #echo "${{ toJson(github.event) }}"
           echo "-------------------"
           echo "CURRENT BRANCH"
-          echo "Current: $(git branch --show-current)" 
-          echo "-------------------"
-          echo "Old target code"
-          echo "origin/${GITHUB_BASE_REF}"
+          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
+          source=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
+            --retry 3 \
+            "$pull_request_url" \
+            | jq '.head.ref')
+          echo "$source"
+          #echo "-------------------"
+          #echo "Old target code"
+          #echo "origin/${GITHUB_BASE_REF}"
           echo "-------------------"
           echo "PR DETAILS"
           pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
@@ -60,3 +65,12 @@ jobs:
             "$pull_request_url" \
             )
           echo "$pr_json"
+          echo "-------------------"
+          echo "Target:"
+          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
+          target=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
+            --retry 3 \
+            "$pull_request_url" \
+            | jq '.base.ref')
+          echo "$target"
+          
