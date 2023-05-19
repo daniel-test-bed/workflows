@@ -23,9 +23,7 @@ on:
             description: source branch coming from
             type: string
             required: true
-env:
-  GITHUB_BASE_REF: ${{inputs.GITHUB_BASE_REF}}
-  GITHUB_HEAD_REF: ${{inputs.GITHUB_HEAD_REF}}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -46,6 +44,9 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
+        env:
+          GITHUB_BASE_REF: ${{inputs.GITHUB_BASE_REF}}
+          GITHUB_HEAD_REF: ${{inputs.GITHUB_HEAD_REF}}
         run: |
          
           echo "PR DETAILS"
@@ -57,8 +58,10 @@ jobs:
           echo "$pr_json"
           echo "-------------------"
           echo "Target:"
-          echo "$GITHUB_BASE_REF"
+          echo "var: $GITHUB_BASE_REF"
+          echo "inputs: ${{inputs.GITHUB_BASE_REF}}"
            echo "-------------------"
           echo "CURRENT BRANCH"
-          echo "$GITHUB_HEAD_REF"
+          echo "var: $GITHUB_HEAD_REF"
+          echo "inputs: ${{inputs.GITHUB_HEAD_REF}}"
           echo "-------------------"
