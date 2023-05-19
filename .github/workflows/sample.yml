@@ -45,17 +45,11 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         env:
-          GITHUB_BASE_REF: ${{inputs.GITHUB_BASE_REF}}
-          GITHUB_HEAD_REF: ${{inputs.GITHUB_HEAD_REF}}
+          GITHUB_BASE_REF: "${{inputs.GITHUB_BASE_REF}}"
+          GITHUB_HEAD_REF: "${{inputs.GITHUB_HEAD_REF}}"
         run: |
          
-          echo "PR DETAILS"
-          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          pr_json=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
-            --retry 3 \
-            "$pull_request_url" \
-            )
-          echo "$pr_json"
+          env
           echo "-------------------"
           echo "Target:"
           echo "var: $GITHUB_BASE_REF"
