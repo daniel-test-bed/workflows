@@ -40,4 +40,15 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           ls
-          echo "Test version NOT using release version code!!!!" 
+          echo "-------------------"
+          echo "ENVARS"
+          env
+          echo "-------------------"
+          echo "EVENT"
+          echo '${{ toJson(github.event) }}
+          echo "-------------------"
+          echo "CURRENT BRANCH"
+          git branch --show-current 
+          echo "-------------------"
+          echo "Old target code"
+          echo "origin/${GITHUB_BASE_REF}"
