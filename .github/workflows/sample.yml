@@ -37,27 +37,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          ls
-          echo "-------------------"
-          #echo "ENVARS"
-          env
-          echo "-------------------"
-          #echo "EVENT"
-          #echo "${{ toJson(github.event) }}"
-          echo "-------------------"
-          echo "CURRENT BRANCH"
-          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
-          source=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
-            --retry 3 \
-            "$pull_request_url" \
-            | jq '.head.ref')
-          echo "$source"
-          #echo "-------------------"
-          #echo "Old target code"
-          #echo "origin/${GITHUB_BASE_REF}"
-          echo "-------------------"
+         
           echo "PR DETAILS"
           pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
           pr_json=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
@@ -71,6 +51,14 @@ jobs:
           target=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
             --retry 3 \
             "$pull_request_url" \
-            | jq '.base.ref')
+            | jq ".base.ref")
           echo "$target"
-          
+           echo "-------------------"
+          echo "CURRENT BRANCH"
+          pull_request_url=$(jq -r ".issue.pull_request.url" "$GITHUB_EVENT_PATH")
+          source=$(curl -s -H "Authorization: Bearer ${{ github.token }}" \
+            --retry 3 \
+            "$pull_request_url" \
+            | jq ".head.ref")
+          echo "$source"
+          echo "-------------------"
