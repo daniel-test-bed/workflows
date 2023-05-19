@@ -44,18 +44,16 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        env:
-          TARGET: "${{inputs.GITHUB_BASE_REF}}"
-          SOURCE: "${{inputs.GITHUB_HEAD_REF}}"
         run: |
-         
+          export GITHUB_BASE_REF=${{inputs.GITHUB_BASE_REF}}
+          export GITHUB_HEAD_REF=${{inputs.GITHUB_HEAD_REF}}
           env
           echo "-------------------"
           echo "Target:"
-          echo "var: $TARGET"
+          echo "var: $GITHUB_BASE_REF"
           echo "inputs: ${{inputs.GITHUB_BASE_REF}}"
            echo "-------------------"
           echo "CURRENT BRANCH"
-          echo "var: $SOURCE"
+          echo "var: $GITHUB_HEAD_REF"
           echo "inputs: ${{inputs.GITHUB_HEAD_REF}}"
           echo "-------------------"
