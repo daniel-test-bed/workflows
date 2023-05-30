@@ -15,7 +15,7 @@ jobs:
         run: |
           user_in_team=$(curl -X GET -H "Authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
           -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/orgs/${{github.org}}/teams/${{env.REQUIRED_TEAM}}/memberships/${{github.actor}}" | jq -r '.state')
+          "https://api.github.com/orgs/${{github.organization.login}}/teams/${{env.REQUIRED_TEAM}}/memberships/${{github.actor}}" | jq -r '.state')
           echo "user_in_team=$user_in_team" >> $GITHUB_ENV
 
       - name: Post Comment and stop workflow if user is not a member
@@ -24,6 +24,6 @@ jobs:
             curl -X POST -H "Authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{github.repository}}/issues/${{github.event.issue.number}}/comments \
-            -d "{\"body\": \"@${{github.actor}} you must be in the team **[${{env.REQUIRED_TEAM}}](https://github.com/orgs/${{github.org}}/teams/${{env.REQUIRED_TEAM}})** in order to trigger the pipeline. (See contribution docs)[]\"}"
+            -d "{\"body\": \"@${{github.actor}} you must be in the team **[${{env.REQUIRED_TEAM}}](https://github.com/orgs/${{github.organization.login}}/teams/${{env.REQUIRED_TEAM}})** in order to trigger the pipeline. (See contribution docs)[]\"}"
             exit 1
           fi
