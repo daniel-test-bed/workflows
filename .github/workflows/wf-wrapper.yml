@@ -13,6 +13,7 @@ on:
       
 jobs:
   notify_contributor_and_label_required:
+    secrets: inherit
     uses: ./.github/workflows/post-usage.yml
 
   start-pipeline:
