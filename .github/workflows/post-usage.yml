@@ -13,11 +13,11 @@ jobs:
       - name: Check Team Membership
         id: check_team
         run: |
-          curl -X GET -H "Authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
+          curl -X GET -H "Authorization: Bearer ${{secrets.ORG_READER}}" \
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/orgs/${{github.event.organization.login}}/teams/${{env.REQUIRED_TEAM}}/memberships/${{github.actor}}"
           
-          user_in_team=$(curl -X GET -H "Authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
+          user_in_team=$(curl -X GET -H "Authorization: Bearer ${{secrets.ORG_READER}}" \
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/orgs/${{github.event.organization.login}}/teams/${{env.REQUIRED_TEAM}}/memberships/${{github.actor}}" | jq -r '.state')
           echo "user_in_team=$user_in_team" >> $GITHUB_ENV
