@@ -12,7 +12,11 @@ on:
         type: string
       
 jobs:
+  notify_contributor_and_label_required:
+    uses: ./.github/workflows/post-usage.yml
+
   start-pipeline:
+    needs: [notify_contributor_and_label_required]
     # Only start if the issue contains the lable ok-to-test and the run pipeline was posted by a collaborator
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/run pipeline' && github.event.comment.author_association=='CONTRIBUTOR' && contains(github.event.issue.labels.*.name, 'ok-to-test') }}
     uses: ./.github/workflows/get-latest-commit-id.yml
@@ -66,5 +70,3 @@ jobs:
       target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       github_repository: ${{ github.repository }}
 
-  notify_contributor_and_label_required:
-    uses: ./.github/workflows/post-usage.yml
