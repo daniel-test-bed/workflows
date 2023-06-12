@@ -57,3 +57,16 @@ jobs:
           echo "var: $GITHUB_HEAD_REF"
           echo "inputs: ${{inputs.GITHUB_HEAD_REF}}"
           echo "-------------------"
+          #!/bin/bash
+
+          # Generate a random number between 0 and 1
+          random_number=$(awk -v seed="$RANDOM" 'BEGIN{srand(seed);print rand()}')
+
+          # Check if the random number is less than 0.5
+          if (( $(echo "$random_number < 0.5" | bc -l) )); then
+            echo "Exiting with non-zero error."
+            exit 1
+          else
+            echo "Exiting with zero error."
+            exit 0
+          fi
