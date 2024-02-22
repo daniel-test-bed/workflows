@@ -44,7 +44,8 @@ jobs:
           GIT_COMMITTER_EMAIL: ${{ steps.import-gpg.outputs.email }}
         run: |
           env
-          npx semantic-release --no-ci --debug
+          bash -c "npx semantic-release --no-ci --debug"
+          echo "complete"
 
       - id: versionNumber
         run: |
