@@ -41,7 +41,9 @@ jobs:
           GIT_AUTHOR_EMAIL: ${{ steps.import-gpg.outputs.email }}
           GIT_COMMITTER_NAME: ${{ steps.import-gpg.outputs.name }}
           GIT_COMMITTER_EMAIL: ${{ steps.import-gpg.outputs.email }}
-        run: npx semantic-release --debug
+        run: |
+          env
+          npx semantic-release --debug
 
       - id: versionNumber
         run: |
@@ -50,24 +52,24 @@ jobs:
           echo "sha=$TAG_SHA"
           echo "sha=$TAG_SHA" >> "$GITHUB_OUTPUT"
 
-      - name: Sign Tag
-        env:
-          SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
-          TAG_SHA: ${{steps.versionNumber.outputs.sha}}
-        run: |
-          if [ -z "$SEMVER_VERSION" ]
-          then
-            echo "No Release Version Set. Skip tagging"
-          else
-            echo "Version: v${SEMVER_VERSION}"
-               # Remove the existing tag created by semantic-release
-            git tag -d "v${SEMVER_VERSION}"
-            git push origin :refs/tags/v${SEMVER_VERSION}
+      # - name: Sign Tag
+      #   env:
+      #     SEMVER_VERSION: ${{steps.versionNumber.outputs.version}}
+      #     TAG_SHA: ${{steps.versionNumber.outputs.sha}}
+      #   run: |
+      #     if [ -z "$SEMVER_VERSION" ]
+      #     then
+      #       echo "No Release Version Set. Skip tagging"
+      #     else
+      #       echo "Version: v${SEMVER_VERSION}"
+      #          # Remove the existing tag created by semantic-release
+      #       git tag -d "v${SEMVER_VERSION}"
+      #       git push origin :refs/tags/v${SEMVER_VERSION}
           
-            git tag "v${SEMVER_VERSION}" "${TAG_SHA}" -f -s -m "Sign Tag"
-            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD v${SEMVER_VERSION})"
-            git push origin "v${SEMVER_VERSION}" -f
-          fi
+      #       git tag "v${SEMVER_VERSION}" "${TAG_SHA}" -f -s -m "Sign Tag"
+      #       export GIT_COMMITTER_DATE="$(git log -1 --format=%aD v${SEMVER_VERSION})"
+      #       git push origin "v${SEMVER_VERSION}" -f
+      #     fi
 
 #        run: |
 #          npx semantic-release --no-ci
