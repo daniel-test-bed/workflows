@@ -43,6 +43,7 @@ jobs:
   execute-main-workflow:
     needs: [start-pipeline, set-commit-status-running]
     uses: ./.github/workflows/sample.yml
+    secrets: ${{ toJson(secrets) }}
     with:
       name: ${{ inputs.name }}
       checkout_commit: ${{needs.start-pipeline.outputs.commit_id}}
