@@ -10,6 +10,9 @@ on:
         description: 'Name to greet'
         required: false
         type: string
+      encoded-secrets:
+        required: true
+        type: string
       
 jobs:
   notify_contributor_and_label_required:
@@ -45,7 +48,7 @@ jobs:
       checkout_commit: ${{needs.start-pipeline.outputs.commit_id}}
       GITHUB_BASE_REF: ${{ needs.start-pipeline.outputs.target_branch}}
       GITHUB_HEAD_REF: ${{ needs.start-pipeline.outputs.source_branch}}
-      secrets: ${{ inputs.secrets }}
+      encoded-secrets: ${{ inputs.encoded-secrets }}
 
   set-commit-status-success:
       needs: [start-pipeline, execute-main-workflow]
