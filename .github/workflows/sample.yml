@@ -23,6 +23,10 @@ on:
             description: source branch coming from
             type: string
             required: true
+          secrets:
+            description: 'comma separated list of secrets'
+            required: false
+            type: string 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
