@@ -10,10 +10,6 @@ on:
         description: 'Name to greet'
         required: false
         type: string
-      secrets:
-        description: 'comma separated list of secrets'
-        required: false
-        type: string 
       
 jobs:
   notify_contributor_and_label_required:
